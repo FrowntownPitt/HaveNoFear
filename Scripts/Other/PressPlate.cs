@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PressPlate : MonoBehaviour {
-    public GameObject door;
 	// Use this for initialization
 	void Start ()
     {
@@ -15,7 +14,10 @@ public class PressPlate : MonoBehaviour {
     {
         if(other.transform.tag == "Player" || other.transform.tag == "AI")
         {
-           door.transform.Rotate(0, -90, 0);
+            Transform dad = transform.parent.transform;
+            transform.parent = null;
+            dad.transform.Rotate(0, -90, 0);
+            transform.parent = dad;
         }
     }
 
@@ -23,7 +25,10 @@ public class PressPlate : MonoBehaviour {
     {
         if (other.transform.tag == "Player" || other.transform.tag == "AI")
         {
-            door.transform.Rotate(0, 90, 0);
+            Transform dad = transform.parent.transform;
+            transform.parent = null;
+            dad.transform.Rotate(0, 90, 0);
+            transform.parent = dad;
         }
     }
 	// Update is called once per frame
