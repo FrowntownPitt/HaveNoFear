@@ -34,6 +34,11 @@ public class Select : MonoBehaviour {
                     else if (temp.selected && temp.inRange)
                         temp.selected = false;
                 }
+                if(hit.transform.tag == "Door")
+                {
+                    PressPlate temp = hit.collider.gameObject.GetComponent<PressPlate>();
+                    temp.Toggle();
+                }
             }
         }
     }
