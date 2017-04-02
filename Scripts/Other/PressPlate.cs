@@ -3,32 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PressPlate : MonoBehaviour {
-	// Use this for initialization
+    public bool open;
+    
+    // Use this for initialization
 	void Start ()
     {
 		
 	}
-	
-
-    void OnTriggerEnter(Collider other)
+	public void Toggle()
     {
-        if(other.transform.tag == "Player" || other.transform.tag == "AI")
-        {
-            Transform dad = transform.parent.transform;
-            transform.parent = null;
-            dad.transform.Rotate(0, -90, 0);
-            transform.parent = dad;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.transform.tag == "Player" || other.transform.tag == "AI")
+        if(open)
         {
             Transform dad = transform.parent.transform;
             transform.parent = null;
             dad.transform.Rotate(0, 90, 0);
             transform.parent = dad;
+            open = false;
+        }
+        else
+        {
+            Transform dad = transform.parent.transform;
+            transform.parent = null;
+            dad.transform.Rotate(0, -90, 0);
+            transform.parent = dad;
+            open = true;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if((other.transform.tag == "Player" || other.transform.tag == "AI") && !open)
+        {
+            Transform dad = transform.parent.transform;
+            transform.parent = null;
+            dad.transform.Rotate(0, -90, 0);
+            transform.parent = dad;
+            open = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if ((other.transform.tag == "Player" || other.transform.tag == "AI") && open)
+        {
+            Transform dad = transform.parent.transform;
+            transform.parent = null;
+            dad.transform.Rotate(0, 90, 0);
+            transform.parent = dad;
+            open = false;
         }
     }
 	// Update is called once per frame
