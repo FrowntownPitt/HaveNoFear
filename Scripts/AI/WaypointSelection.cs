@@ -80,12 +80,17 @@ namespace AI
             }
             if (interrupt == INTERRUPTS.FLEE)
             {
-                if (visitedStackAll.Peek() != null)
+                if (visitedStackAll.Count() > 0)
                 {
                     //targetWaypoint = visitedStackAll.Pop();
-                    while (visitedStackAll.Peek() != null)
+                    while (visitedStackAll.Count() > 0)
                     {
+                        GameObject previousWaypoint = targetWaypoint;
                         targetWaypoint = visitedStackAll.Pop();
+                        if (previousWaypoint.name.Equals(targetWaypoint.name))
+                        {
+                            continue;
+                        }
                         while(visitedList.Contains(targetWaypoint.GetComponent<Waypoints.Waypoint>()))
                             visitedList.Remove(targetWaypoint.GetComponent<Waypoints.Waypoint>());
                         Debug.Log("Popping at random");

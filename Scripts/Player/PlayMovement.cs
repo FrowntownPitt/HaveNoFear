@@ -17,6 +17,8 @@ public class PlayMovement : MonoBehaviour
     private bool upP = false;
     private bool leftP = false;
 
+    bool findingpath = false;
+
     // Use this for initialization
     void Start ()
     {
@@ -26,14 +28,25 @@ public class PlayMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+
+        Vector3 intendedDir = player.desiredVelocity.normalized;
+        float speedMod = Vector3.Dot(transform.forward, intendedDir);
+        player.speed = speed * Mathf.Max(speedMod, 0.1f);
+
         if (Input.GetMouseButtonDown(1))
         {
             moving = true;
+            findingpath = true;
             Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out target, 100);
         }
-        if (moving)
+        if (findingpath && moving)
         {
-                player.destination = target.point;
+            findingpath = false;
+            player.destination = target.point;
+        }
+        if(moving && Vector3.Distance(transform.position, player.destination) <= 1.0){
+            moving = false;
+            //Debug.Log("Reached destination.");
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
