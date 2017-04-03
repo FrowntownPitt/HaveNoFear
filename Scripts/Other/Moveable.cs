@@ -21,8 +21,6 @@ public class Moveable : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (Input.GetMouseButtonDown(0))
-            selected = false;
         if(Input.GetKeyDown(KeyCode.Q) && holding)
         {
             this.transform.parent = null;

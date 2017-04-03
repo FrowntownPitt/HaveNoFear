@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Select : MonoBehaviour {
-
+    public GameObject[] listAI;
 	// Use this for initialization
 	void Start () {
 		
@@ -21,6 +21,8 @@ public class Select : MonoBehaviour {
                 if (hit.transform.tag == "Light")
                 {
                     Collider col = hit.collider;
+                    LightRoom temp = col.gameObject.GetComponent<LightRoom>();
+                    temp.Scare();
                     if(col.transform.GetChild(0).gameObject.activeSelf)
                         col.transform.GetChild(0).gameObject.SetActive(false);
                     else
@@ -37,6 +39,8 @@ public class Select : MonoBehaviour {
                 if(hit.transform.tag == "Door")
                 {
                     PressPlate temp = hit.collider.gameObject.GetComponent<PressPlate>();
+                    DoorRoom temp2 = hit.collider.gameObject.GetComponent<DoorRoom>();
+                    temp2.Scare();
                     temp.Toggle();
                 }
             }
