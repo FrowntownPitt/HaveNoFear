@@ -8,13 +8,12 @@ namespace Rooms
     {
         public bool lightFlick;
         public bool LFGoing;
-        public float LFAmount;
         public bool doorFlick;
         public bool DFGoing;
-        public float DFAmount;
         public bool throwFlick;
         public bool TFGoing;
-        public float TFAmount;
+        public bool yellFlick;
+        public bool YFGoing;
         public float idleTime;
         // Use this for initialization
         void Start()
@@ -66,6 +65,20 @@ namespace Rooms
                     temp.AddScare(AI.ScareHandler.Scares.THROW);
                 }
             }
+            if (yellFlick)
+            {
+                StartCoroutine(YFPause(1));
+                yellFlick = false;
+                YFGoing = true;
+            }
+            if (YFGoing)
+            {
+                if (other.transform.tag == "AI")
+                {
+                    AI.ScareHandler temp = other.gameObject.GetComponent<AI.ScareHandler>();
+                    temp.AddScare(AI.ScareHandler.Scares.YELL);
+                }
+            }
         }
 
         IEnumerator LFPause(float t)
@@ -85,6 +98,12 @@ namespace Rooms
             yield return new WaitForSeconds(t);
             TFGoing = false;
             throwFlick = false;
+        }
+        IEnumerator YFPause(float t)
+        {
+            yield return new WaitForSeconds(t);
+            YFGoing = false;
+            yellFlick = false;
         }
         void OnTriggerEnter(Collider other)
         {

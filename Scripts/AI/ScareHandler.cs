@@ -9,7 +9,8 @@ namespace AI {
         {
             FLICKER,
             DOOR,
-            THROW
+            THROW,
+            YELL
         };
 
         Fearometer fearometer;

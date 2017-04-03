@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Yell : MonoBehaviour {
+    public bool reached = false;
     private float volumeMax = .015f;
     private string listen;
     private AudioClip record = new AudioClip();
@@ -33,7 +34,13 @@ public class Yell : MonoBehaviour {
         }
         if (maximum > volumeMax)
         {
-            
+            reached = true;
         }
+    }
+    
+    void OnTriggerStay(Collider other)
+    {
+        Rooms.Room temp = other.gameObject.GetComponent<Rooms.Room>();
+        temp.yellFlick = true;
     }
 }
