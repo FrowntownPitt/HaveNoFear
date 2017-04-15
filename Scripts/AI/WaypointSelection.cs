@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
+using UnityEngine.AI;
 
 namespace AI
 {
@@ -13,6 +14,10 @@ namespace AI
 
         public float speed;
         public int previousWaypointBias = 0;
+
+        private bool attacking;
+        private GameObject target;
+        private NavMeshAgent agent;
 
         public Fearometer fearometer;
 
@@ -57,11 +62,16 @@ namespace AI
         void Start()
         {
             fearometer = GetComponent<Fearometer>();
+            agent = GetComponent<NavMeshMovement>().agent;
         }
 
         // Update is called once per frame
         void Update()
         {
+            if(attacking)
+            {
+                agent.destination = target.transform.position;
+            }
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 InterruptSelection(INTERRUPTS.ESCAPE);
@@ -107,10 +117,9 @@ namespace AI
                     targetWaypoint = previousWaypoint;
 
                 GetComponent<NavMeshMovement>().setTarget();
-
                 idlingInRoom = false;
                 roamingHallway = false;
-
+                fearometer.amount = fearometer.amount - .1f;
             }
             if (interrupt == INTERRUPTS.ESCAPE)
             {
@@ -124,8 +133,21 @@ namespace AI
             }
         }
 
+        public void Attack(GameObject player)
+        {
+            attacking = true;
+            target = player;
+        }
+
         void OnTriggerEnter(Collider col)
         {
+            if (col.CompareTag("Lose"))
+                Debug.Log("YOU LOSE SUCKER");
+            if (attacking && col.CompareTag("Waypoint"))
+            {
+                attacking = false;
+                InterruptSelection(WaypointSelection.INTERRUPTS.FLEE);
+            }
             //Debug.Log("Collider: " + col.gameObject.name);
             if(col.gameObject.name.Equals(initialStartingPoint.name) && fleeing)
             {

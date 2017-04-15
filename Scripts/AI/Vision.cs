@@ -8,6 +8,7 @@ namespace AI
     {
 
         public GameObject RaycastObject;
+        public GameObject LowRaycastObject;
         public List<int> ScaryLayers = new List<int>();
 
         public float VisionDistance;
@@ -15,6 +16,7 @@ namespace AI
         public float VisionRadius;
 
         private bool spooked = false;
+        private bool looking = true;
         public float spookPauseTime;
 
         [SerializeField]
@@ -41,6 +43,7 @@ namespace AI
         {
             Debug.DrawRay(RaycastObject.transform.position, RaycastObject.transform.forward * VisionDistance);
             RaycastHit ray;
+            RaycastHit lowRay;
             if(Physics.SphereCast(RaycastObject.transform.position, VisionRadius, RaycastObject.transform.forward, out ray, VisionDistance, LayerMask))
             {
                 Debug.Log("Found: " + ray.collider.name);
@@ -50,7 +53,26 @@ namespace AI
                     StartCoroutine(SpookPause(spookPauseTime));
                 }
             }
-            
+            if (Physics.SphereCast(LowRaycastObject.transform.position, VisionRadius, LowRaycastObject.transform.forward, out lowRay, VisionDistance, LayerMask))
+            {
+                Debug.Log("Found: " + ray.collider.name);
+                if (ray.collider.gameObject.CompareTag("Player") && !spooked)
+                {
+                    float attackChance = 1f - GetComponent<Fearometer>().amount;
+                    if ((new System.Random()).NextDouble() < attackChance && looking)
+                    {
+                        GetComponent<WaypointSelection>().Attack(lowRay.collider.gameObject);
+                        looking = false;
+                        StartCoroutine(SpookPause(spookPauseTime));
+                    }
+                    else
+                    {
+                        GetComponent<WaypointSelection>().InterruptSelection(WaypointSelection.INTERRUPTS.FLEE);
+                        StartCoroutine(SpookPause(spookPauseTime));
+                    }
+                }
+            }
+
         }
 
         IEnumerator SpookPause(float t)
@@ -58,6 +80,7 @@ namespace AI
             
             yield return new WaitForSeconds(t);
             spooked = false;
+            looking = true;
         }
     }
 }

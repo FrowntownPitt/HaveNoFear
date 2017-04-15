@@ -37,7 +37,7 @@ namespace AI
                 Rooms.Room room = waypointScript.Room.GetComponent<Rooms.Room>();
                 if (Time.time - waypointScript.hallwayStart > waypointScript.Room.GetComponent<Rooms.Room>().idleTime)
                 {
-                    //Debug.Log("Stopping roaming Hallway");
+                    Debug.Log("Stopping roaming Hallway");
                     waypointScript.roamingHallway = false;
                     waypointScript.GetComponent<NavMeshMovement>().setTarget();
                     waypointScript.moving = true;
@@ -65,20 +65,17 @@ namespace AI
                         //Debug.Log("x, z: (" + x + ", " + z + ")");
                     }
                 }
-                if (targetLocation == null)
-                {
-
-                }
                 if (movingToRandom)
                 {
                     Vector3 intendedDir = GetComponent<NavMeshMovement>().agent.desiredVelocity.normalized;
                     float speedMod = Vector3.Dot(transform.forward, intendedDir);
                     GetComponent<NavMeshMovement>().agent.speed = NavAgentSpeed * Mathf.Max(speedMod, 0.1f);
 
+                    //Debug.Log(Vector3.Distance(transform.position, targetLocation));
                     if (Vector3.Distance(this.transform.position, targetLocation) < HallwayStoppingDistance)
                     {
                         GameObject.Destroy(targetObject);
-                        //Debug.Log("Reached target random point");
+                        Debug.Log("Reached target random point");
                         movingToRandom = false;
                     }
                 }
