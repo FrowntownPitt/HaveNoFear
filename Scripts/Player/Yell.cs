@@ -40,7 +40,11 @@ public class Yell : MonoBehaviour {
     
     void OnTriggerStay(Collider other)
     {
-        Rooms.Room temp = other.gameObject.GetComponent<Rooms.Room>();
-        temp.yellFlick = true;
+        if (reached)
+        {
+            Rooms.Room temp = other.gameObject.GetComponent<Rooms.Room>();
+            temp.yellFlick = true;
+            reached = false;
+        }
     }
 }
