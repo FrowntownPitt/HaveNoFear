@@ -55,8 +55,8 @@ namespace AI
             }
             if (Physics.SphereCast(LowRaycastObject.transform.position, VisionRadius, LowRaycastObject.transform.forward, out lowRay, VisionDistance, LayerMask))
             {
-                Debug.Log("Found: " + ray.collider.name);
-                if (ray.collider.gameObject.CompareTag("Player") && !spooked)
+                Debug.Log("Found: " + lowRay.collider.name);
+                if (lowRay.collider.gameObject.CompareTag("Player") && !spooked)
                 {
                     float attackChance = 1f - GetComponent<Fearometer>().amount;
                     if ((new System.Random()).NextDouble() < attackChance && looking)
