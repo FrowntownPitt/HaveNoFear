@@ -46,7 +46,8 @@ namespace AI
 
         private Stack<GameObject> visitedStackAll = new Stack<GameObject>();
         private List<Waypoints.Waypoint> visitedList = new List<Waypoints.Waypoint>();
-        private bool fleeing = false;
+        [HideInInspector]
+        public bool fleeing = false;
 
         public enum INTERRUPTS {
             JUMPSCARE,
@@ -152,7 +153,7 @@ namespace AI
             if(col.gameObject.name.Equals(initialStartingPoint.name) && fleeing)
             {
                 //Debug.Log("Fleeing the haunted house. Win!");
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
             }
             if (col.CompareTag("Waypoint"))
             {
@@ -171,7 +172,7 @@ namespace AI
                 targetWaypoint = null;
             }
             if (col.gameObject.name.Equals("End Waypoint")){
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
                 //Debug.Log("Reached End");
             }
             else if(targetWaypoint == null && col.gameObject.CompareTag("Waypoint"))
