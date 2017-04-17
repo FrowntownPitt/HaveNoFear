@@ -43,23 +43,18 @@ namespace AI
         public GameObject Hallway;
         [HideInInspector]
         public float hallwayStart;
-        
-        //public float randomlyChooseVisited;
 
         private Stack<GameObject> visitedStackAll = new Stack<GameObject>();
         private List<Waypoints.Waypoint> visitedList = new List<Waypoints.Waypoint>();
         [HideInInspector]
         public bool fleeing = false;
 
+        // These have different meanings, but will interrupt the current movement of the AI
         public enum INTERRUPTS {
             JUMPSCARE,
             FLEE,
             ESCAPE
         }
-        
-        //private float startTime;
-        //private float journeyDistance;
-        //private Vector3 startLocation;
 
         // Use this for initialization
         void Start()
@@ -75,14 +70,14 @@ namespace AI
             {
                 agent.destination = target.transform.position;
             }
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                InterruptSelection(INTERRUPTS.ESCAPE);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                InterruptSelection(INTERRUPTS.FLEE);
-            }
+            //if (Input.GetKeyDown(KeyCode.Alpha1))
+            //{
+            //    InterruptSelection(INTERRUPTS.ESCAPE);
+            //}
+            //if (Input.GetKeyDown(KeyCode.Alpha2))
+            //{
+            //    InterruptSelection(INTERRUPTS.FLEE);
+            //}
         }
 
         public void InterruptSelection(INTERRUPTS interrupt)
@@ -93,9 +88,10 @@ namespace AI
             }
             if (interrupt == INTERRUPTS.FLEE)
             {
+                // If the AI should flee, it will go back a few rooms (by 
+                // way of the last waypoints it visited
                 if (visitedStackAll.Count() > 0)
                 {
-                    //targetWaypoint = visitedStackAll.Pop();
                     while (visitedStackAll.Count() > 0)
                     {
                         GameObject previousWaypoint = targetWaypoint;
@@ -104,9 +100,10 @@ namespace AI
                         {
                             continue;
                         }
-                        while(visitedList.Contains(targetWaypoint.GetComponent<Waypoints.Waypoint>()))
+                        // Remove those popped waypoints from the visited list
+                        while (visitedList.Contains(targetWaypoint.GetComponent<Waypoints.Waypoint>()))
                             visitedList.Remove(targetWaypoint.GetComponent<Waypoints.Waypoint>());
-                        Debug.Log("Popping at random");
+                        
                         // There is a random chance of continuing to get spooked farther back
                         // based on your fearometer
                         if (!((new System.Random()).NextDouble() < fearometer.amount))
@@ -123,6 +120,8 @@ namespace AI
                 idlingInRoom = false;
                 roamingHallway = false;
                 fearometer.amount = fearometer.amount - .1f;
+
+                // There is a random chance of a FLEE turning into an ESCAPE based on the fearometer
                 if((visitedStackAll.Count() <= 1) || (new System.Random()).NextDouble() < (fearometer.amount / 3f))
                 {
                     InterruptSelection(INTERRUPTS.ESCAPE);
@@ -130,13 +129,13 @@ namespace AI
             }
             if (interrupt == INTERRUPTS.ESCAPE)
             {
+                // This will make the AI go back to their starting point and leave
                 targetWaypoint = initialStartingPoint;
                 fleeing = true;
                 idlingInRoom = false;
                 roamingHallway = false;
                 GetComponent<NavMeshMovement>().setTarget();
                 visitedList.Clear();
-                //Debug.Log("INTERRUPT: ESCAPE!");
             }
         }
 
@@ -146,23 +145,35 @@ namespace AI
             target = player;
         }
 
+        // Timer to change scene to the lose scene (after the AI's attack animation is finished)
+        public IEnumerator Die()
+        {
+            yield return new WaitForSeconds(1f);
+            SceneManager.LoadScene(LoseSceneNumber);
+        }
+
         void OnTriggerEnter(Collider col)
         {
             if (col.gameObject.tag == "Player")
-                SceneManager.LoadScene(LoseSceneNumber);
+            {
+                // If the AI and player collide, the player should die.  Make the AI do its attack animation.
+                StartCoroutine(Die());
+                GetComponent<NavMeshMovement>().animator.SetFloat("Speed", 0f);
+                GetComponent<NavMeshMovement>().agent.enabled = false;
+                GetComponent<NavMeshMovement>().animator.SetBool("Attack", true);
+                col.GetComponent<NavMeshAgent>().enabled = false;
+            }
             if (attacking && col.CompareTag("Waypoint"))
             {
                 attacking = false;
                 InterruptSelection(WaypointSelection.INTERRUPTS.FLEE);
             }
-            //Debug.Log("Collider: " + col.gameObject.name);
             if(col.gameObject.name.Equals(initialStartingPoint.name) && fleeing)
             {
-                //Debug.Log("Fleeing the haunted house. Win!");
-                //gameObject.SetActive(false);
             }
             if (col.CompareTag("Waypoint"))
             {
+                // The AI has now visited this waypoint, add it to the stack
                 visitedList.Add(col.gameObject.GetComponent<Waypoints.Waypoint>());
                 if (visitedStackAll.Count > 0 && (visitedStackAll.Peek().name != col.gameObject.name) || visitedStackAll.Count == 0)
                 {
@@ -170,7 +181,6 @@ namespace AI
                     visitedStackAll.Push(col.gameObject);
                 }
             }
-                //.visited = true;
 
             if(col.gameObject == targetWaypoint)
             {
@@ -187,6 +197,7 @@ namespace AI
                 if(col.gameObject.GetComponent<Waypoints.Waypoint>().nextWaypoints.Count > 0)
                 {
                     previousWaypoint = col.gameObject;
+                    // If there is a leaf room, go ahead and idle in there
                     if (previousWaypoint.GetComponent<Waypoints.Waypoint>().Leaf.Count > 0)
                     {
                         bool skipIdle = false;
@@ -203,13 +214,11 @@ namespace AI
                             idlingInRoom = true;
                             Room = previousWaypoint.GetComponent<Waypoints.Waypoint>().Leaf[0].Room;
                             idlingStart = Time.time;
-                            //Debug.Log("Idling in room");
                             return;
                         }
-                        //else 
-                                //Debug.Log("Not idling in room");
                     }
 
+                    // Add all of the next waypoints each 'chance' times, for biasing.
                     List<GameObject> list = new List<GameObject>();
                     for (int i = 0; i < col.gameObject.GetComponent<Waypoints.Waypoint>().nextWaypoints.Count; i++)
                     {
@@ -234,7 +243,7 @@ namespace AI
                     {
                         int rand = randGen.Next(0, list.Count);
                         targetWaypoint = list[rand];
-                        //Debug.Log("Choosing waypoint: " + targetWaypoint.name);
+                        // pick a visited waypoint on chance based on the fearometer
                         if (randGen.NextDouble() < fearometer.amount)
                         {
                             //Debug.Log("Choosing previously visited at random.");
@@ -243,6 +252,7 @@ namespace AI
                     }
                     else
                     {
+                        // If there are no unvisited waypoints, pick a waypoint that was visited
                         chooseVisited = true;
                     }
 
@@ -274,6 +284,8 @@ namespace AI
                             //Debug.Log("REACHED END");
                         }
                     }
+
+                    // Start the idling program
                     if (targetWaypoint != null)
                     {
                         GetComponent<AI.NavMeshMovement>().setTarget();

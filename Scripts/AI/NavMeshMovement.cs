@@ -25,22 +25,13 @@ namespace AI
         // Update is called once per frame
         void Update()
         {
+            // Make the animation move to the speed of the nav agent
             animator.SetFloat("Speed", agent.speed);
-            //if(WaypointScript.moving && WaypointScript.targetWaypoint != null)
-            //{
-            //    agent.Resume();
-            //}
-
-            //if (!WaypointScript.moving)
-            //{
-            //    //Debug.Log("Stopping movement");
-            //    //agent.Stop();
-            //}
         }
 
+        // Set the destination of the agent to the target decided by WaypointSelection
         public void setTarget()
         {
-            //Debug.Log("Setting target");
             if (WaypointScript.targetWaypoint != null)
                 agent.destination = WaypointScript.targetWaypoint.transform.position;
         }

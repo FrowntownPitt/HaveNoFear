@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace Waypoints
 {
+    // Waypoint container.  Place on each waypoint object and point it to all
+    // waypoints in the adjacent rooms.
     public class Waypoint : MonoBehaviour
     {
 

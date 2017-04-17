@@ -28,7 +28,7 @@ public class PlayMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-
+        // Crimp sideways movement, to force the turn
         Vector3 intendedDir = player.desiredVelocity.normalized;
         float speedMod = Vector3.Dot(transform.forward, intendedDir);
         player.speed = speed * Mathf.Max(speedMod, 0.1f);

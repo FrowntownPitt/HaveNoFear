@@ -19,6 +19,8 @@ public class HealthBar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        // Make the health bar follow the AI
+        // and update the text
         transform.localPosition = new Vector3(AI.transform.position.x, AI.transform.position.y + height, AI.transform.position.z);
         HealthText.text = (int)(AI.GetComponent<AI.Fearometer>().amount * 100) + "";
 	}

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using AI;
-using UnityEditor;
 using UnityEngine;
 
 public class WriteOnWall : MonoBehaviour

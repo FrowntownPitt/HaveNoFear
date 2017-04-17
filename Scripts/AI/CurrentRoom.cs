@@ -7,6 +7,7 @@ namespace AI
     public class CurrentRoom : MonoBehaviour
     {
         [HideInInspector]
+        // Save the current room the AI is located, used for room-specific scares
         public GameObject currentRoom = null;
 
         // Use this for initialization
@@ -26,7 +27,6 @@ namespace AI
             if (col.CompareTag("Room"))
             {
                 currentRoom = col.gameObject;
-                //Debug.Log("Entering room: " + col.name);
             }
         }
     }

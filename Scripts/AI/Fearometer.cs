@@ -4,16 +4,11 @@ using UnityEngine;
 
 namespace AI
 {
+    // Container for the fearometer.
     public class Fearometer : MonoBehaviour
     {
-
+        // The actual value of the fearometer
         public float amount;
-
-        // Use this for initialization
-        void Start()
-        {
-
-        }
 
         // Update is called once per frame
         void Update()

@@ -32,11 +32,12 @@ namespace AI {
 
         public void AddScare(Scares scare)
         {
+            // Add the scare to the queue if it is not already there
             if (!ScareQueue.Contains(scare))
             {
                 fearometer.amount += fearCost;
                 ScareQueue.Enqueue(scare);
-                //Debug.Log("Adding scare: " + scare);
+                // Remove this scare from the queue in 3 seconds
                 StartCoroutine(RemoveScare(3.0f));
             }
         }
@@ -45,7 +46,6 @@ namespace AI {
         {
             yield return new WaitForSeconds(time);
             ScareQueue.Dequeue();
-            //Debug.Log("Removing scare: " + ScareQueue.Dequeue());
         }
     }
 }

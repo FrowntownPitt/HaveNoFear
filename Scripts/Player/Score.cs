@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace Player
 {
+    // Goes on the Player, tracks the score and displays the remaining AI on the overlay
     public class Score : MonoBehaviour
     {
 

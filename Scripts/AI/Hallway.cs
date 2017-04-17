@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace AI
 {
+    // Calculates random target locations while the AI is idling in a room
     public class Hallway : MonoBehaviour
     {
 
@@ -32,12 +33,11 @@ namespace AI
         {
             if (waypointScript.roamingHallway)
             {
-                //Debug.Log("Roaming Hallway");
-                
                 Rooms.Room room = waypointScript.Room.GetComponent<Rooms.Room>();
+
                 if (Time.time - waypointScript.hallwayStart > waypointScript.Room.GetComponent<Rooms.Room>().idleTime)
                 {
-                    Debug.Log("Stopping roaming Hallway");
+                    // Stop roaming the hallway if our timer ran out
                     waypointScript.roamingHallway = false;
                     waypointScript.GetComponent<NavMeshMovement>().setTarget();
                     waypointScript.moving = true;
@@ -46,36 +46,28 @@ namespace AI
                 {
                     if (!movingToRandom)
                     {
+                        // Pick a random location in the room and set the nav agent's course
                         float x = Random.Range(room.transform.position.x - room.transform.localScale.x / 2, room.transform.position.x + room.transform.localScale.x / 2);
                         float z = Random.Range(room.transform.position.z - room.transform.localScale.z / 2, room.transform.position.z + room.transform.localScale.z / 2);
-
-                        //targetObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        //targetObject.transform.position = new Vector3(x, 0, z);
-                        //targetObject.SetActive(true);
-                        //targetObject.GetComponent<BoxCollider>().enabled = false;
-
+                        
                         targetLocation = new Vector3(x, 0, z);
 
                         GetComponent<NavMeshMovement>().agent.destination = targetLocation;
 
                         GetComponent<NavMeshMovement>().agent.Resume();
                         movingToRandom = true;
-                        //Debug.Log("Targeting random point");
-                        //Debug.Log("Room: " + room.name);
-                        //Debug.Log("x, z: (" + x + ", " + z + ")");
                     }
                 }
                 if (movingToRandom)
                 {
+                    // Crimp the forward movement while turning
                     Vector3 intendedDir = GetComponent<NavMeshMovement>().agent.desiredVelocity.normalized;
                     float speedMod = Vector3.Dot(transform.forward, intendedDir);
                     GetComponent<NavMeshMovement>().agent.speed = NavAgentSpeed * Mathf.Max(speedMod, 0.1f);
-
-                    //Debug.Log(Vector3.Distance(transform.position, targetLocation));
+                    
+                    // If we reached our destination, make the random selection start again
                     if (Vector3.Distance(this.transform.position, targetLocation) < HallwayStoppingDistance)
                     {
-                        GameObject.Destroy(targetObject);
-                        Debug.Log("Reached target random point");
                         movingToRandom = false;
                     }
                 }
@@ -84,9 +76,10 @@ namespace AI
             {
                 if (movingToRandom)
                 {
+                    // If we are done roaming in the hallway, restore the nav agent
+                    // speed and stop this script's logic.
                     GetComponent<NavMeshMovement>().agent.speed = NavAgentSpeed;
                     movingToRandom = false;
-
                 }
 
             }

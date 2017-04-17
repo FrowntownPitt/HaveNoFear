@@ -31,6 +31,7 @@ namespace AI
         // Use this for initialization
         void Start()
         {
+            // Maker out layermask
             for(int i=0; i<ScaryLayers.Count; i++)
             {
                 int maskBits = ScaryLayers[i];

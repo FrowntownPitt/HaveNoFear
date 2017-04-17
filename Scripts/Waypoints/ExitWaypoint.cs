@@ -30,11 +30,13 @@ namespace Waypoint
                 //ScoreScript.UpdateOverlay();
                 if (isLoseWaypoint)
                 {
+                    // Go to the lose screen, the AI reached the end
                     other.gameObject.SetActive(false);
                     ScoreScript.Lose();
                 } else
                 {
-                    Debug.Log("Origin Waypoint Reached" + other.name);
+                    // Otherwise, the AI reached the start. Reduce the score and 
+                    // if the score reaches 0 you win!
                     if (other.gameObject.GetComponent<AI.WaypointSelection>().fleeing)
                     {
                         ScoreScript.RemainingAI--;
