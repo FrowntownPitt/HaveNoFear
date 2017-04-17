@@ -37,7 +37,7 @@ namespace AI {
                 fearometer.amount += fearCost;
                 ScareQueue.Enqueue(scare);
                 //Debug.Log("Adding scare: " + scare);
-                StartCoroutine(RemoveScare(1.0f));
+                StartCoroutine(RemoveScare(3.0f));
             }
         }
 

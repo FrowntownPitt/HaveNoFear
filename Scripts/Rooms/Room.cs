@@ -25,7 +25,7 @@ namespace Rooms
         {
             if(lightFlick)
             {
-                StartCoroutine(LFPause(1));
+                StartCoroutine(LFPause(7));
                 lightFlick = false;
                 LFGoing = true;
             }
@@ -39,7 +39,7 @@ namespace Rooms
             }
             if (doorFlick)
             {
-                StartCoroutine(DFPause(1));
+                StartCoroutine(DFPause(7));
                 doorFlick = false;
                 DFGoing = true;
             }
@@ -53,7 +53,7 @@ namespace Rooms
             }
             if (throwFlick)
             {
-                StartCoroutine(TFPause(1));
+                StartCoroutine(TFPause(7));
                 throwFlick = false;
                 TFGoing = true;
             }
@@ -67,7 +67,7 @@ namespace Rooms
             }
             if (yellFlick)
             {
-                StartCoroutine(YFPause(1));
+                StartCoroutine(YFPause(7));
                 yellFlick = false;
                 YFGoing = true;
             }
@@ -77,6 +77,7 @@ namespace Rooms
                 {
                     AI.ScareHandler temp = other.gameObject.GetComponent<AI.ScareHandler>();
                     temp.AddScare(AI.ScareHandler.Scares.YELL);
+                    other.GetComponent<AI.WaypointSelection>().InterruptSelection(AI.WaypointSelection.INTERRUPTS.FLEE);
                 }
             }
         }

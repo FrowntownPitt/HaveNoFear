@@ -16,8 +16,11 @@ public class Select : MonoBehaviour {
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100f))
+            RaycastHit[] hits;
+            hits = Physics.RaycastAll(ray, 100f);
+            for(int i=0;i<hits.Length;i++)
             {
+                hit = hits[i];
                 if (hit.transform.tag == "Light")
                 {
                     Collider col = hit.collider;

@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 namespace AI
 {
@@ -11,6 +12,7 @@ namespace AI
     {
 
         public GameObject initialStartingPoint;
+        public int LoseSceneNumber;
 
         public float speed;
         public int previousWaypointBias = 0;
@@ -121,6 +123,10 @@ namespace AI
                 idlingInRoom = false;
                 roamingHallway = false;
                 fearometer.amount = fearometer.amount - .1f;
+                if((visitedStackAll.Count() <= 1) || (new System.Random()).NextDouble() < (fearometer.amount / 3f))
+                {
+                    InterruptSelection(INTERRUPTS.ESCAPE);
+                }
             }
             if (interrupt == INTERRUPTS.ESCAPE)
             {
@@ -142,8 +148,8 @@ namespace AI
 
         void OnTriggerEnter(Collider col)
         {
-            if (col.CompareTag("Lose"))
-                Debug.Log("YOU LOSE SUCKER");
+            if (col.gameObject.tag == "Player")
+                SceneManager.LoadScene(LoseSceneNumber);
             if (attacking && col.CompareTag("Waypoint"))
             {
                 attacking = false;

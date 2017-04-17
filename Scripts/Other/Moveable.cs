@@ -11,6 +11,7 @@ public class Moveable : MonoBehaviour {
     public GameObject indic;
     public bool inRange = false;
 
+    private bool cantDrop;
     private bool holding = false;
     private GameObject AOE;
 	// Use this for initialization
@@ -25,19 +26,25 @@ public class Moveable : MonoBehaviour {
         {
             this.transform.parent = null;
             selected = false;
-            this.GetComponent<Rigidbody>().AddForce(AOE.transform.forward * 360);
+            this.GetComponent<Rigidbody>().AddForce(AOE.transform.forward * 720);
         }
         if (!inRange)
             selected = false;
         if (Vector3.Distance(AOE.transform.position, this.transform.position) < (AOE.transform.GetComponent<CapsuleCollider>().radius + sel))
         {
             inRange = true;
-            this.GetComponent<Renderer>().material = selectable;
+            if (this.transform.GetChild(0).tag == "FancyChair")
+                this.transform.GetChild(0).gameObject.GetComponent<Renderer>().material = selectable;
+            else
+                this.GetComponent<Renderer>().material = selectable;
         }
         if (Vector3.Distance(AOE.transform.position, this.transform.position) >= (AOE.transform.GetComponent<CapsuleCollider>().radius + sel))
         {
             inRange = false;
-            this.GetComponent<Renderer>().material = unselectable;
+            if (this.transform.GetChild(0).tag == "FancyChair")
+                this.transform.GetChild(0).gameObject.GetComponent<Renderer>().material = unselectable;
+            else
+                this.GetComponent<Renderer>().material = unselectable;
         }
         if (selected)
         {
@@ -49,14 +56,32 @@ public class Moveable : MonoBehaviour {
             holding = true;
             this.gameObject.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
             this.transform.parent = AOE.transform;
+            this.GetComponent<BoxCollider>().isTrigger = true;
         }
-        if (!selected)
+        if (!selected && !cantDrop)
         {
             indic.SetActive(false);
             holding = false;
             this.transform.parent = null;
             this.gameObject.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = true;
             transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            this.GetComponent<BoxCollider>().isTrigger = false;
+        }
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if(col.tag == "Door")
+        {
+            cantDrop = true;
+        }
+    }
+
+    void OnTriggerExit(Collider col)
+    {
+        if(col.tag == "Door")
+        {
+            cantDrop = false;
         }
     }
 }

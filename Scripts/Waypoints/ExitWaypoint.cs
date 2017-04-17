@@ -34,7 +34,7 @@ namespace Waypoint
                     ScoreScript.Lose();
                 } else
                 {
-                    Debug.Log("Origin Waypoint Reached");
+                    Debug.Log("Origin Waypoint Reached" + other.name);
                     if (other.gameObject.GetComponent<AI.WaypointSelection>().fleeing)
                     {
                         ScoreScript.RemainingAI--;

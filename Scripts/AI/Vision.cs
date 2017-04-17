@@ -46,7 +46,7 @@ namespace AI
             RaycastHit lowRay;
             if(Physics.SphereCast(RaycastObject.transform.position, VisionRadius, RaycastObject.transform.forward, out ray, VisionDistance, LayerMask))
             {
-                Debug.Log("Found: " + ray.collider.name);
+                //Debug.Log("Found: " + ray.collider.name);
                 if (ray.collider.gameObject.CompareTag("AI") && !spooked)
                 {
                     GetComponent<WaypointSelection>().InterruptSelection(WaypointSelection.INTERRUPTS.FLEE);
@@ -55,7 +55,7 @@ namespace AI
             }
             if (Physics.SphereCast(LowRaycastObject.transform.position, VisionRadius, LowRaycastObject.transform.forward, out lowRay, VisionDistance, LayerMask))
             {
-                Debug.Log("Found: " + lowRay.collider.name);
+                //Debug.Log("Found: " + lowRay.collider.name);
                 if (lowRay.collider.gameObject.CompareTag("Player") && !spooked)
                 {
                     float attackChance = 1f - GetComponent<Fearometer>().amount;
