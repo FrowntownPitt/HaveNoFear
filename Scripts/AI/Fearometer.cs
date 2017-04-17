@@ -18,7 +18,10 @@ namespace AI
         // Update is called once per frame
         void Update()
         {
-
+            if(amount < 0f)
+            {
+                amount = 0f;
+            }
         }
     }
 }

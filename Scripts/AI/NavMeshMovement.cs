@@ -8,6 +8,8 @@ namespace AI
     public class NavMeshMovement : MonoBehaviour
     {
 
+        public Animator animator;
+
         private WaypointSelection WaypointScript;
         //[HideInInspector]
         public NavMeshAgent agent;
@@ -23,6 +25,7 @@ namespace AI
         // Update is called once per frame
         void Update()
         {
+            animator.SetFloat("Speed", agent.speed);
             //if(WaypointScript.moving && WaypointScript.targetWaypoint != null)
             //{
             //    agent.Resume();
