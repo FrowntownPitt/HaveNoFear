@@ -19,13 +19,12 @@ public class PlayMovement : MonoBehaviour
 
     bool findingpath = false;
 
-    // Use this for initialization
+    //all the controls for moving the player and camera
+
     void Start ()
     {
         player = GetComponent<UnityEngine.AI.NavMeshAgent>();
     }
-	
-	// Update is called once per frame
 	void Update ()
     {
         // Crimp sideways movement, to force the turn

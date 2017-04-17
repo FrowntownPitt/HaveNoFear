@@ -9,7 +9,7 @@ public class LightRoom : MonoBehaviour {
 	void Start () {
 		
 	}
-	
+	//scaring by light flicker is room specific using this method call
     public void Scare()
     {
         Rooms.Room temp = home.GetComponent<Rooms.Room>();

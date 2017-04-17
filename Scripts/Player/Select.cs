@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//provides control for clicking things
 public class Select : MonoBehaviour {
     public GameObject[] listAI;
 	// Use this for initialization
@@ -17,10 +17,12 @@ public class Select : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             RaycastHit[] hits;
+            //raycastall so that objects can be clicked even when inside a door's pressure plate
             hits = Physics.RaycastAll(ray, 100f);
             for(int i=0;i<hits.Length;i++)
             {
                 hit = hits[i];
+                //toggle light
                 if (hit.transform.tag == "Light")
                 {
                     Collider col = hit.collider;
@@ -31,6 +33,7 @@ public class Select : MonoBehaviour {
                     else
                         col.transform.GetChild(0).gameObject.SetActive(true);
                 }
+                //pick up or drop an object
                 if(hit.transform.tag == "Selectable")
                 {
                     Moveable temp = hit.collider.gameObject.GetComponent<Moveable>();
@@ -39,6 +42,7 @@ public class Select : MonoBehaviour {
                     else if (temp.selected && temp.inRange)
                         temp.selected = false;
                 }
+                //toggle a door
                 if(hit.transform.tag == "Door")
                 {
                     PressPlate temp = hit.collider.gameObject.GetComponent<PressPlate>();

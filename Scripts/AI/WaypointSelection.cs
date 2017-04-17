@@ -61,11 +61,14 @@ namespace AI
         {
             fearometer = GetComponent<Fearometer>();
             agent = GetComponent<NavMeshMovement>().agent;
+            targetWaypoint = initialStartingPoint;
+            agent.SetDestination(targetWaypoint.transform.position);
         }
 
         // Update is called once per frame
         void Update()
         {
+            //Debug.Log(name + "Next waypoint:" + targetWaypoint.name);
             if(attacking)
             {
                 agent.destination = target.transform.position;

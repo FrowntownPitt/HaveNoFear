@@ -20,15 +20,18 @@ namespace Rooms
         {
             
         }
-
+        //knows when the AI are in the room
         void OnTriggerStay(Collider other)
         {
+            //Rooms know if a specific scare event has occurred with flick bools
             if(lightFlick)
             {
+                //coroutine to allow cooldowns between scares of the same type and to reset bools
                 StartCoroutine(LFPause(7));
                 lightFlick = false;
                 LFGoing = true;
             }
+            //going bools are used for cooldowns
             if(LFGoing)
             {
                 if (other.transform.tag == "AI")

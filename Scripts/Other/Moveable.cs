@@ -22,6 +22,7 @@ public class Moveable : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        //throws held object
         if(Input.GetKeyDown(KeyCode.Q) && holding)
         {
             this.transform.parent = null;
@@ -30,7 +31,8 @@ public class Moveable : MonoBehaviour {
         }
         if (!inRange)
             selected = false;
-        if (Vector3.Distance(AOE.transform.position, this.transform.position) < (AOE.transform.GetComponent<CapsuleCollider>().radius + sel))
+        //checks distance to player
+        if (Vector3.Distance(AOE.transform.position, this.transform.position) < (AOE.transform.GetComponent<CapsuleCollider>().radius * sel))
         {
             inRange = true;
             if (this.transform.GetChild(0).tag == "FancyChair")
@@ -38,7 +40,8 @@ public class Moveable : MonoBehaviour {
             else
                 this.GetComponent<Renderer>().material = selectable;
         }
-        if (Vector3.Distance(AOE.transform.position, this.transform.position) >= (AOE.transform.GetComponent<CapsuleCollider>().radius + sel))
+        //checks distance to player
+        if (Vector3.Distance(AOE.transform.position, this.transform.position) >= (AOE.transform.GetComponent<CapsuleCollider>().radius * sel))
         {
             inRange = false;
             if (this.transform.GetChild(0).tag == "FancyChair")
@@ -46,6 +49,7 @@ public class Moveable : MonoBehaviour {
             else
                 this.GetComponent<Renderer>().material = unselectable;
         }
+        //when held, object no longer obeys physics and becomes indicated
         if (selected)
         {
             indic.SetActive(true);
@@ -55,6 +59,7 @@ public class Moveable : MonoBehaviour {
                 transform.position = new Vector3(this.transform.position.x, 1, this.transform.position.z);
             holding = true;
             this.gameObject.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
+            //to move with player
             this.transform.parent = AOE.transform;
             this.GetComponent<BoxCollider>().isTrigger = true;
         }

@@ -10,6 +10,7 @@ public class PressPlate : MonoBehaviour {
     {
 		
 	}
+    //switches the door from open to closed, or vice versa
 	public void Toggle()
     {
         if(open)
@@ -29,7 +30,7 @@ public class PressPlate : MonoBehaviour {
             open = true;
         }
     }
-
+    //detects when player or AI need to pass
     void OnTriggerStay(Collider other)
     {
         if((other.transform.tag == "Player" || other.transform.tag == "AI") && !open)
